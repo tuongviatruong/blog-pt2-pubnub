@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %} Title Goes Here {% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+
+    {% block head %}
+        <!-- put extra CSS/JS here -->
+    {% endblock %}
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+    <a class="navbar-brand">Blog</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/create">Create</a>
+        </li>
+      </div>
+        <div class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/register">Register</a>
+        </li>
+      </div>
+      
+    </div>
+  </nav>
+<br>
+  <main role="main" class="container">
+    <div class="row">
+      <div class="col-md-9">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          {% for category, message in messages %}
+            <div class='alert alert-{{ category }}'>
+              {{ message }}
+            </div>
+          {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {% block body %}{% endblock %}
+        
+      </div>
+      <div class="col-md-3">
+        <div class="content-section">
+          <h2>Chat Here </h2>
+          
+            <div><input id=input size="25" placeholder="Type here and press enter" /></div>
+          Chat Output
+           <div id="box"></div>
+            <script src=https://cdn.pubnub.com/sdk/javascript/pubnub.4.0.11.min.js></script>
+            <script>(function(){
+              var pubnub = new PubNub({ publishKey : 'demo', subscribeKey : 'demo' });
+              function $(id) { return document.getElementById(id); }
+              var box = $('box'), input = $('input'), channel = '10chat-demo';
+              pubnub.addListener({
+                  message: function(obj) {
+                      box.innerHTML = (''+obj.message).replace( /[<>]/g, '' ) + '<br>' + box.innerHTML
+                  }});
+              pubnub.subscribe({channels:[channel]});
+              input.addEventListener('keyup', function(e) {
+                  if ((e.keyCode || e.charCode) === 13) {
+                    pubnub.publish({channel : channel,message : input.value,x : (input.value='')});
+                }
+              });
+        })();</script>  
+          
+          
+          
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+h2 {
+    color: #008B8B;
+}
+
+a {
+    color: #008B8B;
+}
+
+body {
+    background-color: gainsboro;
+}
+
+#box {
+  background-color: gainsboro;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 20px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+
+
