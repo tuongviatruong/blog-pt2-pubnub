@@ -1,6 +1,3 @@
-# bcrypt = Bcrypt(app)
-# login_manager = LoginManager(app)
-
 from flaskblog import app
 
 

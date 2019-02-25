@@ -37,10 +37,3 @@ class Post(db.Model):
         """Provide helpful representation when printed"""
         return "<Post post_id={} title={}>".format(self.post_id, self.title)
 
-
-def example_data():
-    blog = Blog(title="Example Post", description="This is example post for testing", date="November 6 2018")
-
-    db.session.add(blog)
-    db.session.commit()
-
