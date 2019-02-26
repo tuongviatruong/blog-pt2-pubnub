@@ -10,6 +10,13 @@ body {
     background-color: gainsboro;
 }
 
+.article-img {
+  height: 85px;
+  width: 85px;
+  margin-right: 16px;
+}
+
+
 #box {
   background-color: gainsboro;
 }
@@ -20,6 +27,12 @@ body {
   border: 1px solid #dddddd;
   border-radius: 10px;
   margin-bottom: 20px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3
 }
 
 

@@ -1,18 +1,18 @@
 import os
 import secrets
 from PIL import Image
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, abort
 from flaskblog import app, db, bcrypt
-from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm
+from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
 from flaskblog.model import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
 
 @app.route('/')
 def homepage():
-    """Show homepage with one blog already shown, show all in database after creating post"""
-    # posts = Blog.query.all()
-    return render_template("homepage.html")
+    """Show homepage with all posts in database after creating post"""
+    posts = Post.query.all()
+    return render_template("homepage.html", posts=posts)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -56,7 +56,7 @@ def save_picture(form_picture):
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
 
-    output_size = (125,125)
+    output_size = (150, 150)
     i = Image.open(form_picture)
     i.thumbnail(output_size)
     i.save(picture_path)
@@ -83,40 +83,55 @@ def account():
     return render_template('account.html', title='Account', image_file=image_file, form=form)
 
 
-# @app.route('/create', methods=['GET', 'POST'])
-# def create_form():
-#     """"Create a post and add to database"""
-#     form = BlogForm()
-#     if form.validate_on_submit():
-#         post = Blog(title=form.title.data,description=form.description.data,date=form.date.data)
-#         db.session.add(post)
-#         db.session.commit()
-#         return redirect('/')
-#     return render_template("create_form.html", title="Create a Post", form=form)
+@app.route('/post/new', methods=['GET', 'POST'])
+@login_required
+def new_post():
+    """"Create a post and add to database"""
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(title=form.title.data,content=form.content.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post has been created!', 'success')
+        return redirect(url_for('homepage'))
+    return render_template("create_form.html", title="Create a Post", form=form)
 
 
-# @app.route('/post/<int:blog_id>')
-# def post(blog_id):
-#     """Shows one post when clicked"""
-#     post = Blog.query.get(blog_id)
+@app.route('/post/<int:post_id>')
+def post(post_id):
+    """Shows one post when clicked"""
+    post = Post.query.get_or_404(post_id)
 
-#     return render_template('post.html', post=post)
+    return render_template('post.html', title=post.title, post=post)
 
-# @app.route('/post/<int:blog_id>/edit', methods=["GET", "POST"])
-# def edit_post(blog_id):
-#     """Edit post with data and edit database"""
-#     post = Blog.query.get(blog_id)
+@app.route('/post/<int:post_id>/edit', methods=["GET", "POST"])
+def edit_post(post_id):
+    """Edit post with data and edit database"""
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('post', post_id=post.id))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.content.data = post.content
 
-#     form = BlogForm()
-#     if form.validate_on_submit():
-#         post.title = form.title.data
-#         post.description = form.description.data
-#         post.date= form.date.data
-#         db.session.commit()
-#         return redirect(url_for('post', blog_id=post.blog_id))
+    return render_template("create_form.html", title="Edit Post", form=form)
 
-#     form.title.data = post.title
-#     form.description.data = post.description
-#     form.date.data = post.date
+@app.route('/post/<int:post_id>/delete', methods=["POST"])
+@login_required
+def delete_post(post_id):
+    """Delete post in database"""
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()  
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('homepage'))
 
-#     return render_template("create_form.html", title="Edit Post", form=form)
