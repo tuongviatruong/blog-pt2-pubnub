@@ -21,11 +21,11 @@ After loggins in, users can change their username, email, or update their profil
 User can create a post by clicking "Create Post" on NavBar <br>
 After filling in information for Title, Content, and clicking Post, new post is displayed in homepage<br>
 User can view details of the post by clicking on post. User can also edit/delete their post only <br>
-
+<img src="flaskblog/static/blog.gif">
 
 ## <a name="chatfeatures"></a> Chat Feature
 Chat Application with PubNub ChatEngine
-<img src="/static/chat.mov">
+<img src="flaskblog/static/chat.gif">
 
 ## <a name="installation"></a>Setup/Installation
 
