@@ -4,7 +4,7 @@ const usernameModal = document.getElementById('username-input-modal');
 const usernameInput = document.getElementById('username-input');
 const joinButton = document.getElementById('join-button');
 
-
+const onlineList = document.getElementById('online-list');
 const chat = document.getElementById('chat');
 const log = document.getElementById('log');
 const messageInput = document.getElementById('message-input');
@@ -45,13 +45,58 @@ window.onbeforeunload = (event) => {
 
 // Init ChatEngine
 const ChatEngine = ChatEngineCore.create({
-    publishKey: 'pub-c-99549f36-c60c-41b6-a20e-4a1d3ef8b114',
-    subscribeKey: 'sub-c-b9a57d62-297f-11e9-8eef-42c9ad3619d5'
+    publishKey: 'pub-c-d5a5361c-8269-46c8-95aa-592e113f8b02',
+    subscribeKey: 'sub-c-39d165f0-3b19-11e9-b5cf-1e59042875b2'
 }, {
     globalChannel: 'chat-example'
 });
 
+// Init the WebRTC plugin and chat interface here
+ChatEngine.on('$.ready', (data) => {
+    let onlineUuids = [];
 
+    // Add a user to the online list when they connect
+    ChatEngine.global.on('$.online.*', (payload) => {
+        if (payload.user.name === 'Me') {
+            return;
+        }
+
+        const userId = payload.user.uuid;
+        const name = payload.user.state.username;
+
+        const userListDomNode = createUserListItem(userId, name);
+
+        const index = onlineUuids.findIndex(id => id === payload.user.uuid);
+        const alreadyInList = index > -1 ? true : false;
+
+        if (!alreadyInList) {
+            onlineUuids.push(payload.user.uuid);
+        } else {
+            return;
+        }
+
+        onlineList.appendChild(userListDomNode);
+    });
+
+    // Remove a user from the online list when they disconnect
+    ChatEngine.global.on('$.offline.*', (payload) => {
+        const index = onlineUuids.findIndex((id) => id === payload.user.uuid);
+        onlineUuids.splice(index, 1);
+
+        const div = document.getElementById(payload.user.uuid);
+        if (div) div.remove();
+    });
+
+    // Render up to 20 old messages in the global chat
+    ChatEngine.global.search({
+        reverse: true,
+        event: 'message',
+        limit: 20
+    }).on('message', renderMessage);
+
+    // Render new messages in realtime
+    ChatEngine.global.on('message', renderMessage);
+});
 
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -146,7 +191,7 @@ function sendMessage() {
     messageInput.value = '';
 }
 
-// Makes a new, version 4, universally unique identifier (UUID). Written by
+scre// Makes a new, version 4, universally unique identifier (UUID). Written by
 //     Stack Overflow user broofa
 //     (https://stackoverflow.com/users/109538/broofa) in this post
 //     (https://stackoverflow.com/a/2117523/6193736).

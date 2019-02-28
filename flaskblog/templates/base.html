@@ -65,8 +65,7 @@
       </div>
       <div class="col-md-3">
         <div class="content-section">
-          <img class="rounded-circle img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}">
-          <h2>Chat Here </h2>
+ <!--          <h2>Chat Here </h2>
           
             <div><input id=input size="25" placeholder="Type here and press enter" /></div>
           Chat Output
@@ -78,8 +77,8 @@
               var box = $('box'), input = $('input'), channel = '10chat-demo';
               pubnub.addListener({
                   message: function(obj) {
-                    // var user = "{{ current_user.username }}"
-                      box.innerHTML = (' '+obj.message).replace( /[<>]/g, '' ) + '<br>' + box.innerHTML
+                    var user = "{{ current_user.username }}"
+                      box.innerHTML = (user+': '+obj.message).replace( /[<>]/g, '' ) + '<br>' + box.innerHTML
                   }});
               pubnub.subscribe({channels:[channel]});
               input.addEventListener('keyup', function(e) {
@@ -87,13 +86,46 @@
                     pubnub.publish({channel : channel,message : input.value,x : (input.value='')});
                 }
               });
-        })();</script>  
+        })();</script>   -->
           
-      
+
+    <div id="username-input-modal" class="modal-background">
+        <div class="user-input-modal">
+          <img class="rounded-circle img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}">
+            <h2>Chat Here</h2>
+            <input id="username-input" type="text" maxlength="16" class="modal-text-input" placeholder="username">
+            <div id="join-button" class="modal-button disabled">
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-interface" class="chat-interface">
+
+
+
+        <div id="chat" class="chat">
+            <div id="log" class="log"></div>
+            <div class="input-container">
+                <div class="textarea-container">
+                    <textarea id="message-input" placeholder="Global Chat..." maxlength="10000"></textarea>
+                </div>
+                <div id="submit" class="submit">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>       
         </div>
       </div>
     </div>
   </main>
+
+<script src="https://cdn.jsdelivr.net/npm/chat-engine@0.9.18/dist/chat-engine.js"></script>
+<script src="/static/chat.js" type="text/javascript"></script>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
