@@ -1,4 +1,4 @@
-# Travel Planning Blog With Pubnub Chat
+# Travel Blog With Pubnub Chat
 A Blog that mulitple users can add posts to about travel plans. Users can register, login, and make a profile with a profile picture. They are able to add/edit/delete posts when logged in.
 Pubnub chat is included for users to chat about travel plans. Users can also see who's online on the chat.
 
