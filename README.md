@@ -70,6 +70,5 @@ $ python server.py
 ```
 
 ## <a name='future'></a> Looking Ahead
-* Add more testing
-* Add more styling to make site look better
-* Add login/register- so different users can add to blog
+* Add testing
+* Show online users on chat to make it look better
