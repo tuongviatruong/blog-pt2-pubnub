@@ -16,10 +16,10 @@ __Frontend:__ HTML, CSS, Bootstrap, Jinja <br>
 __Backend:__ Python, Flask, PostgreSQL, SQLAlchemy<br>
 
 ## <a name="features"></a> Features
-Users can register and log in
-After loggins in, users can change their username, email, or update their profile picture.
+Users can register and log in <br>
+After logging in, users can change their username, email, or update their profile picture <br>
 User can create a post by clicking "Create Post" on NavBar <br>
-After filling in information for Title, Content, and clicking Post, new post is displayed in homepage<br>
+After filling in information for Title, Content, and clicking Post, new post is displayed on homepage<br>
 User can view details of the post by clicking on post. User can also edit/delete their post only <br>
 <img src="flaskblog/static/blog.gif">
 
