@@ -135,7 +135,7 @@ def delete_post(post_id):
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('homepage'))
 
-@app.route('/user/<username>')
+@app.route('/user/<string:username>')
 def user_posts(username):
     """Show user's posts"""
     user = User.query.filter_by(username=username).first_or_404()
