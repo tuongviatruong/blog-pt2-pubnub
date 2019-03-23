@@ -53,14 +53,11 @@ Install dependencies:
 $ pip install -r requirements.txt
 ```
 
-Create database 'blog'.
+Create database and tables.
 ```
-$ createdb blog
-```
-Create your database tables.
-```
-$ python -i model.py
-Connected to DB.
+$ python 
+>>> from flaskblog import db
+>>> from flaskblog.model import User, Post
 >>> db.create_all()
 
 ```
