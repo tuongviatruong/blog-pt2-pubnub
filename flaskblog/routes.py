@@ -11,7 +11,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route('/')
 def homepage():
     """Show homepage with all posts in database after creating post"""
-    posts = Post.query.all()
+    posts = Post.query.order_by(Post.date_posted.desc())
     return render_template("homepage.html", posts=posts)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -134,4 +134,13 @@ def delete_post(post_id):
     db.session.commit()  
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('homepage'))
+
+@app.route('/user/<username>')
+def user_posts(username):
+    """Show user's posts"""
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc())
+
+    return render_template("user_post.html", posts=posts, user=user)
+
 
